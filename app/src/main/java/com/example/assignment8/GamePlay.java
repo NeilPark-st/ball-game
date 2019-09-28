@@ -65,8 +65,8 @@ public class GamePlay extends AppCompatActivity {
             score = 0;
             stage = 1;
             start = true;
-            playerBallRadius = 30;
-            targetBallRadius = 30;
+            playerBallRadius = 40;
+            targetBallRadius = 40;
             lifeBallRadius = 20;
             lifeBalls = new LifeBall[10];
 
@@ -100,6 +100,7 @@ public class GamePlay extends AppCompatActivity {
                             stopX = startX;
                             stopY = startY;
                             playerBall.setVel(15, theta);
+                            break;
                     }
                     return true;
                 }
@@ -138,6 +139,13 @@ public class GamePlay extends AppCompatActivity {
             targetBall.changePosition();
 
             canvas.drawLine(startX, startY, stopX, stopY, linePaint);
+
+            if(playerBall.getY() + playerBall.getRadius() < 0){
+                lifeCount--;
+                playerBall.setPositionToInitial();
+                playerBall.setVel(0,0);
+                touchAllowed = true;
+            }
 
             invalidate();
         }
@@ -225,6 +233,11 @@ public class GamePlay extends AppCompatActivity {
             }
 
             y += v_y;
+        }
+
+        public void setPositionToInitial(){
+            x = width / 2;
+            y = height - radius;
         }
 
         public void setVel(float vel, float theta){
