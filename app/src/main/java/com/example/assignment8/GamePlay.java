@@ -83,7 +83,7 @@ public class GamePlay extends AppCompatActivity {
                     switch (motionEvent.getAction()){
                         case MotionEvent.ACTION_DOWN:
                         case MotionEvent.ACTION_MOVE:
-                            if(motionEvent.getY() < startY){
+                            if(motionEvent.getY() + playerBallRadius < startY){
                                 theta = (float) Math.atan((motionEvent.getY() - startY) / (motionEvent.getX() - startX));
                                 if(theta < 0){
                                     stopX = (float) (startX + length * Math.cos(theta));
@@ -99,7 +99,7 @@ public class GamePlay extends AppCompatActivity {
                             touchAllowed = false;
                             stopX = startX;
                             stopY = startY;
-                            playerBall.setVel(15, theta);
+                            playerBall.setVel(20, theta);
                             break;
                     }
                     return true;
@@ -132,7 +132,7 @@ public class GamePlay extends AppCompatActivity {
 
             canvas.drawCircle(playerBall.getX(), playerBall.getY(), playerBall.getRadius(), playerBall.getPaint());
             canvas.drawCircle(targetBall.getX(), targetBall.getY(), targetBall.getRadius(), targetBall.getPaint());
-            for(int i = 0; i < lifeCount; i++){
+            for(int i = 0; i < lifeCount - 1; i++){
                 canvas.drawCircle(lifeBalls[i].getX(), lifeBalls[i].getY(), lifeBalls[i].getRadius(), lifeBalls[i].getPaint());
             }
             playerBall.changePosition();
