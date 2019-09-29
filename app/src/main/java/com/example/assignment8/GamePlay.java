@@ -16,14 +16,15 @@ import java.util.ArrayList;
 public class GamePlay extends AppCompatActivity {
 
     int width, height;
+    boolean isEnd, isVic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_play);
 
-        //Toast.makeText(this, String.valueOf(screenHeight), Toast.LENGTH_SHORT).show();
-
+        isEnd = false;
+        isVic = false;
 
         //Set up full screen display
         ActionBar actionBar = getSupportActionBar();
@@ -68,7 +69,7 @@ public class GamePlay extends AppCompatActivity {
 
             lifeCount = 10;
             score = 0;
-            currentStage = 5;
+            currentStage = 1;
             start = true;
             playerBallRadius = 40;
             targetBallRadius = 50;
@@ -176,6 +177,35 @@ public class GamePlay extends AppCompatActivity {
                 //stage[4].add(new Obstacle(width/2, (float)(targetBallRadius * (2 + 1.5)), (int)(targetBallRadius * 1.5), (float)7.5, 0, 0, height));
 
                 start = false;
+            }
+
+            if(lifeCount <= 0){
+                isEnd = true;
+                if(score >= 10)
+                    isVic = true;
+            }
+
+            switch (score){
+                case 0:
+                    currentStage = 1;
+                    break;
+                case 1:
+                case 2:
+                    currentStage = 2;
+                    break;
+                case 3:
+                case 4:
+                    currentStage = 3;
+                    break;
+                case 5:
+                case 6:
+                case 7:
+                    currentStage = 4;
+                    break;
+                case 8:
+                case 9:
+                    currentStage = 5;
+                    break;
             }
 
             canvas.drawCircle(playerBall.getX(), playerBall.getY(), playerBall.getRadius(), playerBall.getPaint());
