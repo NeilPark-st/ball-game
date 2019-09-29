@@ -188,6 +188,7 @@ public class GamePlay extends AppCompatActivity {
 
             canvas.drawLine(startX, startY, stopX, stopY, linePaint);
 
+            //when the ball is out from the view
             if(playerBall.getY() + playerBall.getRadius() < 0){
                 lifeCount--;
                 playerBall.setPositionToInitial();
@@ -195,11 +196,32 @@ public class GamePlay extends AppCompatActivity {
                 touchAllowed = true;
             }
 
+            //drawing obstacles for the right stage
             currentStageObstacle = stage[currentStage - 1];
             for(int i = 0; i < currentStageObstacle.size(); i++){
                 canvas.drawCircle(currentStageObstacle.get(i).getX(), currentStageObstacle.get(i).getY(),
                         currentStageObstacle.get(i).getRadius(), currentStageObstacle.get(i).getPaint());
                 currentStageObstacle.get(i).changePosition();
+            }
+
+            //if the player ball collides with the target
+            if(playerBall.isCollideWith(targetBall)){
+                playerBall.setPositionToInitial();
+                playerBall.setVel(0,0);
+                lifeCount--;
+                score++;
+                touchAllowed = true;
+            }
+
+            //if the player ball collides with obstacles
+            for(int i=0; i<currentStageObstacle.size(); i++){
+                if(playerBall.isCollideWith(currentStageObstacle.get(i))){
+                    playerBall.setPositionToInitial();
+                    playerBall.setVel(0,0);
+                    lifeCount--;
+                    currentStageObstacle.remove(i);
+                    touchAllowed = true;
+                }
             }
 
             invalidate();
@@ -304,6 +326,13 @@ public class GamePlay extends AppCompatActivity {
                 v_x = (float) (-vel * Math.cos(theta));
                 v_y = (float) (vel * Math.sin(-theta));
             }
+        }
+
+        public boolean isCollideWith(Ball b){
+            if(Math.pow(x - b.getX(), 2) + Math.pow(y - b.getY(), 2) < Math.pow(radius + b.getRadius(), 2))
+                return true;
+            else
+                return false;
         }
     }
 
