@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Assignment8</string>
+    <string name="game_name">Ball Game</string>
+    <string name="buttonStart">Start</string>
+    <string name="buttonHiScore">Hi Score</string>
+    <string name="developers">Lead Developer - Neil Park \nSupport - Greg Brennan</string>
 </resources>

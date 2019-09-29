@@ -38,8 +38,14 @@ public class MainActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
         getWindow().getDecorView().setSystemUiVisibility(uiOptions);
 
+       // Intent intent = new Intent(this, GamePlay.class);
+       // startActivity(intent);
+    }
+    // Onclick method to start the GamePlay
+
+    public void onclickButtonStart(View v) {
+
         Intent intent = new Intent(this, GamePlay.class);
         startActivity(intent);
     }
-
 }
