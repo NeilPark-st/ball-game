@@ -11,6 +11,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import java.util.ArrayList;
+
 public class GamePlay extends AppCompatActivity {
 
     int width, height;
@@ -44,11 +46,11 @@ public class GamePlay extends AppCompatActivity {
 
     //Draw the ball and set to initial position
     public class GraphicsView extends View {
-        int lifeCount, score, stage;
+        int lifeCount, score, currentStage;
         PlayerBall playerBall;
         TargetBall targetBall;
         LifeBall[] lifeBalls;
-        int playerBallRadius, targetBallRadius, lifeBallRadius;
+        int playerBallRadius, targetBallRadius, lifeBallRadius, obstacleRadius;
         boolean start;
 
         //throwing player ball related
@@ -57,17 +59,21 @@ public class GamePlay extends AppCompatActivity {
         Paint linePaint;
         boolean touchAllowed;
 
+        //obstacles
+        ArrayList<Obstacle>[] stage;
+        ArrayList<Obstacle> currentStageObstacle;
 
         public GraphicsView(Context context) {
             super(context);
 
             lifeCount = 10;
             score = 0;
-            stage = 1;
+            currentStage = 5;
             start = true;
             playerBallRadius = 40;
-            targetBallRadius = 40;
+            targetBallRadius = 50;
             lifeBallRadius = 20;
+            obstacleRadius = 40;
             lifeBalls = new LifeBall[10];
 
             linePaint = new Paint();
@@ -99,7 +105,7 @@ public class GamePlay extends AppCompatActivity {
                             touchAllowed = false;
                             stopX = startX;
                             stopY = startY;
-                            playerBall.setVel(20, theta);
+                            playerBall.setVel(30, theta);
                             break;
                     }
                     return true;
@@ -107,6 +113,11 @@ public class GamePlay extends AppCompatActivity {
             };
 
             this.setOnTouchListener(onTouchGraphicsView);
+
+            stage = new ArrayList[5];
+            for(int i = 0; i < 5; i++){
+                stage[i] = new ArrayList<>();
+            }
         }
 
         @Override
@@ -127,6 +138,43 @@ public class GamePlay extends AppCompatActivity {
                 stopY = startY;
                 length = 150;
 
+                //Making Obstacles for each stage
+                //stage2
+                stage[1].add(new Obstacle(width/4, height/2, obstacleRadius, 0, 0, 0, height ));
+                stage[1].add(new Obstacle(width/2, height/4, obstacleRadius, 0, 0, 0, height ));
+                stage[1].add(new Obstacle(width*3/4, height/2, obstacleRadius, 0, 0, 0, height ));
+                //stage3
+                stage[2].add(new Obstacle(width * 3 / 8, height / 2, obstacleRadius * 2, 0, 0, 0, height));
+                stage[2].add(new Obstacle(width / 2, height * 3 / 8, obstacleRadius * 2, 0, 0, 0, height));
+                stage[2].add(new Obstacle(width * 5 / 8, height / 2, obstacleRadius * 2, 0, 0, 0, height));
+                //stage4
+                for(int i=1; i<=1; i++){
+                    stage[3].add(new Obstacle(width * i / 2, height / 4, obstacleRadius, (float)(Math.random() * 5 + 5),
+                            (float)Math.toRadians(180 * i), 0, height));
+                }
+                for(int i=1; i<=2; i++){
+                    stage[3].add(new Obstacle(width * i / 3, height / 2, obstacleRadius, (float)(Math.random() * 5 + 5),
+                            (float)Math.toRadians(180 * i), 0, height));
+                }
+                for(int i=1; i<=1; i++){
+                    stage[3].add(new Obstacle(width * i / 2, height * 3 / 4, obstacleRadius, (float)(Math.random() * 5 + 5),
+                            (float)Math.toRadians(180 * i), 0, height));
+                }
+                //stage5
+                for(int i=1; i<=1; i++){
+                    stage[4].add(new Obstacle(width * i / 2, height / 4, obstacleRadius, (float)(Math.random() * 5 + 5),
+                            (float)Math.toRadians(Math.random() * 360), targetBallRadius * 6, height - playerBallRadius * 4));
+                }
+                for(int i=1; i<=3; i++){
+                    stage[4].add(new Obstacle(width * i / 4, height / 2, obstacleRadius, (float)(Math.random() * 5 + 5),
+                            (float)Math.toRadians(Math.random() * 360), targetBallRadius * 6, height - playerBallRadius * 4));
+                }
+                for(int i=1; i<=1; i++){
+                    stage[4].add(new Obstacle(width * i / 2, height * 3 / 4, obstacleRadius, (float)(Math.random() * 5 + 5),
+                            (float)Math.toRadians(Math.random() * 360), targetBallRadius * 6, height - playerBallRadius * 4));
+                }
+                //stage[4].add(new Obstacle(width/2, (float)(targetBallRadius * (2 + 1.5)), (int)(targetBallRadius * 1.5), (float)7.5, 0, 0, height));
+
                 start = false;
             }
 
@@ -145,6 +193,13 @@ public class GamePlay extends AppCompatActivity {
                 playerBall.setPositionToInitial();
                 playerBall.setVel(0,0);
                 touchAllowed = true;
+            }
+
+            currentStageObstacle = stage[currentStage - 1];
+            for(int i = 0; i < currentStageObstacle.size(); i++){
+                canvas.drawCircle(currentStageObstacle.get(i).getX(), currentStageObstacle.get(i).getY(),
+                        currentStageObstacle.get(i).getRadius(), currentStageObstacle.get(i).getPaint());
+                currentStageObstacle.get(i).changePosition();
             }
 
             invalidate();
@@ -253,10 +308,56 @@ public class GamePlay extends AppCompatActivity {
     }
 
     public class LifeBall extends Ball{
+
         public LifeBall(float x, float y, int r){
             super(x, y, r);
             paint = new Paint();
             paint.setColor(getColor(R.color.colorLife));
+        }
+    }
+
+    public class Obstacle extends Ball{
+        float velocity, theta, v_x, v_y;
+        float min_y, max_y;
+
+        public Obstacle(float x, float y, int r, float vel, float th, float minY, float maxY){
+            super(x, y, r);
+            paint = new Paint();
+            paint.setColor(getColor(R.color.colorObstacle));
+
+            velocity = vel;
+            theta = th;
+            v_x = (float) (vel * Math.cos(theta));
+            v_y = (float) (vel * Math.sin(theta));
+
+            min_y = minY;
+            max_y = maxY;
+        }
+
+        public void changePosition(){
+            if(x + radius + v_x > width){
+                x = width - radius;
+                v_x = -v_x;
+            }
+            else if(x - radius + v_x < 0){
+                x = radius;
+                v_x = -v_x;
+            }
+            else {
+                x += v_x;
+            }
+
+            if(y + radius + v_y > max_y){
+                y = max_y - radius;
+                v_y = -v_y;
+            }
+            else if(y - radius + v_y < min_y){
+                y = min_y + radius;
+                v_y = -v_y;
+            }
+            else {
+                y += v_y;
+            }
         }
     }
 }

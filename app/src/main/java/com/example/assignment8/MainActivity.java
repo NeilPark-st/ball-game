@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity {
-    public int lifeCount = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

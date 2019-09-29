@@ -8,5 +8,6 @@
     <color name="colorTarget">#00FF00</color>
     <color name="colorPlayer">#0000FF</color>
     <color name="colorLife">#00E6E6</color>
+    <color name="colorObstacle">#EEEE00</color>
     <color name="colorLine">#D3D3D3</color>
 </resources>
