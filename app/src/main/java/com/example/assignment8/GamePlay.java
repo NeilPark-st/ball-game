@@ -51,6 +51,10 @@ public class GamePlay extends AppCompatActivity {
         constraintLayout.addView(graphicsView);
     }
 
+    public void onclickButtonHome(View v){
+        finish();
+    }
+
     //Draw the ball and set to initial position
     public class GraphicsView extends View {
         int lifeCount, score, currentStage;

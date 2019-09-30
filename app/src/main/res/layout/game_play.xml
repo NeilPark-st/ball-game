@@ -40,7 +40,8 @@
             android:id="@+id/buttonGoToHome"
             android:textAlignment="center"
             android:text="Go to Home"
-            android:layout_margin="30dp"/>
+            android:layout_margin="30dp"
+            android:onClick="onclickButtonHome"/>
 
     </LinearLayout>
 
