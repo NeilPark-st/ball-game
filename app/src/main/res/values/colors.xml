@@ -10,4 +10,6 @@
     <color name="colorLife">#00E6E6</color>
     <color name="colorObstacle">#EEEE00</color>
     <color name="colorLine">#D3D3D3</color>
+    <color name="colorClear">#00DD00</color>
+    <color name="colorGameOver">#DD0000</color>
 </resources>
