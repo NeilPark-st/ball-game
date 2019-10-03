@@ -47,4 +47,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, GamePlay.class);
         startActivity(intent);
     }
+
+    public void onclickButtonHighScore(View v){
+        Intent intent = new Intent(this, HiScore.class);
+        startActivity(intent);
+    }
 }

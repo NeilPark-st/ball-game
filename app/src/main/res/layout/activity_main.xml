@@ -50,8 +50,8 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:background="@drawable/button_styles"
                 android:textColor="@color/white"
-                android:text="@string/buttonHiScore"/>
-            <!--android:onClick="onclickButtonHiScore"/>-->
+                android:text="@string/buttonHiScore"
+                android:onClick="onclickButtonHighScore"/>
 
             <TextView
                 android:id="@+id/credits"

@@ -39,6 +39,8 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:id="@+id/buttonGoToHome"
             android:textAlignment="center"
+            android:background="@drawable/button_styles"
+            android:textColor="@color/white"
             android:text="Go to Home"
             android:layout_margin="30dp"
             android:onClick="onclickButtonHome"/>

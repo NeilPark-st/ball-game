@@ -1,9 +1,11 @@
 package com.example.assignment8;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +18,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import java.util.ArrayList;
 
 public class GamePlay extends AppCompatActivity {
+
+    public static final String PREF_NAME = "HIGH_SCORE";
 
     int width, height;
     TextView textViewStage, textViewScore, textViewGameOver, textViewResultScore;
@@ -292,6 +296,50 @@ public class GamePlay extends AppCompatActivity {
                 button.setVisibility(VISIBLE);
                 textViewStage.setText("");
                 textViewScore.setText("");
+
+                //High score saving
+                SharedPreferences prefs = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                //editor.clear();
+                //editor.commit();
+                int dataNum = prefs.getInt("dataNum", 0);
+
+                for(int i = 1; i <= dataNum + 1; i++){
+                    //Log.i("getData", ""+prefs.getInt(""+i,0));
+                    if(prefs.getInt("" + i, 0) < score){
+                        for(int j = dataNum + 1; j > i; j--){
+                            editor.putInt(""+j, prefs.getInt("" + (j-1), 0));
+                            editor.commit();
+                        }
+                        dataNum++;
+                        if(dataNum > 5)
+                            dataNum = 5;
+                        editor.putInt("" + i, score);
+                        editor.commit();
+                        break;
+                    }
+                }
+
+                /*
+                if(prefs.getInt("first",0) < score){
+                    editor.putInt("first", score);
+                }
+                else if(prefs.getInt("second", 0) < score){
+                    editor.putInt("second", score);
+                }
+                else if(prefs.getInt("third", 0) < score){
+                    editor.putInt("third", score);
+                }
+                else if(prefs.getInt("forth", 0) < score){
+                    editor.putInt("forth", score);
+                }
+                else if(prefs.getInt("fifth", 0) < score){
+                    editor.putInt("fifth", score);
+                }
+                 */
+                editor.putInt("dataNum", dataNum);
+                editor.commit();
+                Log.i("dataNum", ""+dataNum);
             }
 
 
